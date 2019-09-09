@@ -2,7 +2,7 @@ import React from 'react';
 
 import TodoListItem from '../todo-list-item'
 
-const TodoList = ( {todos} ) => {
+const TodoList = ( {todos, deleteItem} ) => {
 
 	const elements = todos.map((item) => {
 
@@ -10,7 +10,10 @@ const TodoList = ( {todos} ) => {
 
 		return (
 			<li key={id} className="list-group-item">
-				<TodoListItem {...elem} />
+				<TodoListItem
+					{...elem}
+					deleteItem = {() => deleteItem(id) }
+				/>
 			</li>
 		)
 	});
