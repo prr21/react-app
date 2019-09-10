@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 
 import AppHeader from '../app-header'
 import AppSearch from '../app-search'
+import ItemAdd from '../item-add'
 import TodoList from '../todo-list'
 import ItemStatusFilter from '../item-status-filter'
 
 import './app.css';
 
 export default class App extends Component {
+
+	maxId = 100;
 
 	state = {
 		todoData: [
@@ -18,12 +21,26 @@ export default class App extends Component {
 	}
 
 	makeDelete = (id) => {
-		const { todoData } = this.state
-		this.setState( () => {
+		this.setState( ({todoData}) => {
 			let index = todoData.findIndex( (el) => el.id === id );
 
 			return ({
 				todoData: [...todoData.slice(0, index), ...todoData.slice(index+1)]
+			})
+		})
+	}
+
+	onItemAdd = (text) =>{
+		const newItem = {
+			label: text,
+			important: false,
+			id: this.maxId++
+		}
+
+		this.setState( ({todoData}) => {
+
+			return ({
+				todoData: [...todoData, newItem]
 			})
 		})
 	}
@@ -44,6 +61,7 @@ export default class App extends Component {
 					todos={todoData}
 					deleteItem={ this.makeDelete }
 				/>
+				<ItemAdd onItemAdd={ this.onItemAdd }/>
 			</div>
 		)
 	}
