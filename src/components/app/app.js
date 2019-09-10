@@ -10,13 +10,27 @@ import './app.css';
 
 export default class App extends Component {
 
-	maxId = 100;
+	maxId = 0
 
 	state = {
 		todoData: [
-			{label: "Get coffee", important: false, id: '1'},
-			{label: "Build App", important: true, id: '2'},
-			{label: "Get Rest", important: false, id: '3'}
+			this.createNewItem("Get coffee"),
+			this.createNewItem("Build App"),
+			this.createNewItem("Get Rest")
+		]
+	}
+
+	makeToggle(arr, id, opt){
+		let index = arr.findIndex( (el) => el.id === id );
+
+		let newItem = {
+			...arr[index], 
+			[opt]: !arr[index][opt]
+		};
+
+		return [
+			...arr.slice(0, index), newItem,
+			...arr.slice(index+1)
 		]
 	}
 
@@ -30,27 +44,52 @@ export default class App extends Component {
 		})
 	}
 
-	onItemAdd = (text) =>{
-		const newItem = {
-			label: text,
-			important: false,
-			id: this.maxId++
-		}
-
+	onItemAdd = (text) => {
 		this.setState( ({todoData}) => {
 
 			return ({
-				todoData: [...todoData, newItem]
+				todoData: [...todoData, this.createNewItem(text)]
 			})
 		})
+	}
+
+	toggleDone = (id) => {
+		this.setState( ({todoData}) => {
+			return ({
+				todoData: this.makeToggle(todoData, id, 'done')
+			})
+		})
+	}
+
+	toggleImportant = (id) => {
+		this.setState( ({todoData}) => {
+			return ({
+				todoData: this.makeToggle(todoData, id, 'important')
+			})
+		})
+	}
+
+	createNewItem(label){
+		return {
+			label,
+			important: false,
+			done: false,
+			id: this.maxId++
+		}
 	}
 
 	render(){
 		const {todoData} = this.state
 
+		const doneCount = todoData.filter( (el) => el.done).length;
+		const toDoCount = todoData.length - doneCount
+
 		return (
 			<div className="todo-app">
-				<AppHeader toDo={1} done={3} />
+				<AppHeader 
+					toDo={toDoCount} 
+					done={doneCount}
+				/>
 
 				<div className="top-panel d-flex">
 					<AppSearch />
@@ -60,6 +99,8 @@ export default class App extends Component {
 				<TodoList
 					todos={todoData}
 					deleteItem={ this.makeDelete }
+					toggleImportant={ this.toggleImportant }
+					toggleDone={ this.toggleDone }
 				/>
 				<ItemAdd onItemAdd={ this.onItemAdd }/>
 			</div>

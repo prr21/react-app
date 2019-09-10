@@ -2,7 +2,7 @@ import React from 'react';
 
 import TodoListItem from '../todo-list-item'
 
-const TodoList = ( {todos, deleteItem} ) => {
+const TodoList = ( {todos, deleteItem, toggleImportant, toggleDone} ) => {
 
 	const elements = todos.map((item) => {
 
@@ -13,6 +13,8 @@ const TodoList = ( {todos, deleteItem} ) => {
 				<TodoListItem
 					{...elem}
 					deleteItem = {() => deleteItem(id) }
+					toggleDone = {() => toggleDone(id) }
+					toggleImportant = {() => toggleImportant(id) }
 				/>
 			</li>
 		)
