@@ -11,14 +11,18 @@ export default class ItemAdd extends Component {
 			label : ''
 		}
 
-		this.submitForm = (e) => {
-			e.preventDefault()
-			this.props.onItemAdd(this.state.label)
-		}
-
 		this.changeInp = (e) => {
 			this.setState({
 				label: e.target.value
+			})
+		}
+
+		this.submitForm = (e) => {
+			e.preventDefault()
+			this.props.onItemAdd(this.state.label)
+
+			this.setState({
+				label: ''
 			})
 		}
 	}
@@ -34,6 +38,7 @@ export default class ItemAdd extends Component {
 					className="form-control mr-1"
 					placeholder='Type a text'
 					onChange={this.changeInp}
+					value={this.state.label}
 				/>
 
 				<button className="btn btn-outline-primary">
