@@ -1,18 +1,45 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import './item-add.css';
 
-const ItemAdd = ({onItemAdd}) => {
+export default class ItemAdd extends Component {
 
-	return( 
-		<div className="text-right mt-2">
-			<button 
-				className="btn btn-outline-primary"
-				onClick={ () => onItemAdd('text')}>
+	constructor(props){
+		super()
+
+		this.state = {
+			label : ''
+		}
+
+		this.submitForm = (e) => {
+			e.preventDefault()
+			this.props.onItemAdd(this.state.label)
+		}
+
+		this.changeInp = (e) => {
+			this.setState({
+				label: e.target.value
+			})
+		}
+	}
+
+	render(){
+		return(
+
+			<form 
+				className="d-flex mt-2"
+				onSubmit={ this.submitForm }
+				>
+				<input
+					className="form-control mr-1"
+					placeholder='Type a text'
+					onChange={this.changeInp}
+				/>
+
+				<button className="btn btn-outline-primary">
 					Добавить дело
-			</button>
-		</div>
-	)
+				</button>
+			</form>
+		)
+	}
 }
-
-export default ItemAdd
