@@ -1,8 +1,21 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './app-search.css';
 
-const AppSearch = () => {
-	return <input placeholder="search" className="form-control search-input" />
-}
+export default class AppSearch extends Component{
 
-export default AppSearch
+	changeLabel = (e) => {
+		const searchLetter = e.target.value.toLowerCase();
+
+		this.props.searchItem(searchLetter);
+	}
+
+	render(){
+		return (
+			<input className="form-control search-input" 
+				placeholder="search"
+				onChange={this.changeLabel}
+			/>
+		)
+	}
+	
+}

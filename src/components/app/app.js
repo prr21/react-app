@@ -17,7 +17,8 @@ export default class App extends Component {
 			this.createNewItem("Get coffee"),
 			this.createNewItem("Build App"),
 			this.createNewItem("Get Rest")
-		]
+		],
+		term : ''
 	}
 
 	makeToggle(arr, id, opt){
@@ -78,11 +79,23 @@ export default class App extends Component {
 		}
 	}
 
+	searchItems = (searchLetter) => {
+		this.setState(() => {
+			return {term: searchLetter}
+		})
+	}
+
 	render(){
-		const {todoData} = this.state
+		const {todoData, term} = this.state
 
 		const doneCount = todoData.filter( (el) => el.done).length;
 		const toDoCount = todoData.length - doneCount
+
+		const visibleItems = todoData.filter( (item) => (
+			item.label.toLowerCase()
+				.indexOf(term) !== -1
+			)
+		)
 
 		return (
 			<div className="todo-app">
@@ -92,12 +105,15 @@ export default class App extends Component {
 				/>
 
 				<div className="top-panel d-flex">
-					<AppSearch />
+					<AppSearch 
+						todos={todoData}
+						searchItem={this.searchItems}
+					/>
 					<ItemStatusFilter />
 				</div>
 				
 				<TodoList
-					todos={todoData}
+					todos={visibleItems}
 					deleteItem={ this.makeDelete }
 					toggleImportant={ this.toggleImportant }
 					toggleDone={ this.toggleDone }
