@@ -18,7 +18,8 @@ export default class App extends Component {
 			this.createNewItem("Build App"),
 			this.createNewItem("Get Rest")
 		],
-		term : ''
+		term : '',
+		filterStat: 'all'
 	}
 
 	makeToggle(arr, id, opt){
@@ -85,17 +86,41 @@ export default class App extends Component {
 		})
 	}
 
+	changeStatus = (status) => {
+		this.setState(() => {
+			return {filterStat: status}
+		})
+	}
+
+	applyFilter(arr){
+		let {filterStat} = this.state
+
+		if (filterStat === 'done') {
+			arr = arr.filter( (item) => (
+				item.done
+			));
+
+		} else if (filterStat === 'active'){
+			arr = arr.filter( (item) => (
+				!item.done
+			));
+		}
+		return arr;
+	}
+
 	render(){
-		const {todoData, term} = this.state
+		const {todoData, term, filterStat} = this.state
 
 		const doneCount = todoData.filter( (el) => el.done).length;
 		const toDoCount = todoData.length - doneCount
 
-		const visibleItems = todoData.filter( (item) => (
+		let visibleItems = todoData.filter( (item) => (
 			item.label.toLowerCase()
 				.indexOf(term) !== -1
-			)
-		)
+			))
+
+		visibleItems = this.applyFilter(visibleItems)
+
 
 		return (
 			<div className="todo-app">
@@ -109,7 +134,10 @@ export default class App extends Component {
 						todos={todoData}
 						searchItem={this.searchItems}
 					/>
-					<ItemStatusFilter />
+					<ItemStatusFilter
+						status={filterStat}
+						changeStatus={this.changeStatus}
+					/>
 				</div>
 				
 				<TodoList
